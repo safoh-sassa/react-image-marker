@@ -34,9 +34,6 @@ function ImageMarker() {
     reader.onload = (event) => {
       setImage(event.target.result);
       setImgLoaded(true);
-      updateSize();
-
-
     };
     reader.readAsDataURL(file);
   };
@@ -54,6 +51,14 @@ function ImageMarker() {
     setMarks((prev) => [...prev, { x: 0, y: 0 }]);
     updateSize();
   };
+
+  const handleRemoveMark = (index) => {
+    setMarks((prev) => {
+      const newMarks = [...prev];
+      newMarks.splice(index, 1);
+      return newMarks;
+    });
+  }
 
   const handleAddTitle = (value) => {
     setTitle(value)
@@ -91,7 +96,8 @@ function ImageMarker() {
                       placeholder='Title'
                     />
                     <br />
-                    Y:<RangeSlider
+                    <b style={{ color: "#2FE979", marginRight: "5px", marginLeft: "15px" }}>Y</b>
+                    <RangeSlider
                       min={0}
                       max={imgDimensions.Height - 150}
                       onChange={(event) => setTitlePos(
@@ -103,7 +109,8 @@ function ImageMarker() {
                       value={parseInt(((titlePos.Y * imgDimensions.Height) / 100))}
                       style={{ width: "90%" }}
                     />
-                    X:<RangeSlider
+                    <b style={{ color: "#2FE979", marginRight: "5px", marginLeft: "15px" }}>X</b>
+                    <RangeSlider
                       min={0}
                       max={imgDimensions.Width - 340}
                       onChange={(event) => setTitlePos(
@@ -157,33 +164,41 @@ function ImageMarker() {
             }
           </div>
           {marks.map((mark, index) => (
-            <div key={index} style={{ display: "flex", width: "90%" }}>
-              Y:<RangeSlider
+            <div id="marksDiv" key={index} style={{ display: "flex", width: "90%", marginTop: "8px" }}>
+              {index + 1} -  <b style={{ color: "#2FE979", marginRight: "5px", marginLeft: "15px" }}>Y</b>
+              <RangeSlider
                 min={1}
                 max={imgDimensions.Height - 20}
                 onChange={(event) => handleMarkChange(index, 'y', parseInt(event.target.value))}
                 value={parseInt(((mark.y * imgDimensions.Height) / 100))}
                 style={{ marginRight: "50px", width: "140px" }}
               />
-              X:<RangeSlider
+              <b style={{ color: "#2FE979", marginRight: "5px" }}>X</b>
+              <RangeSlider
                 min={1}
                 max={imgDimensions.Width - 20}
                 onChange={(event) => handleMarkChange(index, 'x', parseInt(event.target.value))}
                 value={parseInt(((mark.x * imgDimensions.Width) / 100))}
                 style={{ width: "140px" }}
               />
+
+              <Button
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "30px", height: "25px", marginLeft: "10px" }}
+                variant="danger"
+                onClick={() => handleRemoveMark(index)}><i className="bi bi-trash"></i></Button>
             </div>
           ))}
 
           <Button variant="outline-primary" onClick={handleAddMark}
-            style={{ marginTop: "30px" }}
+            style={{ marginTop: "8px" }}
           >Add Mark</Button>
         </div>
-      )}
+      )
+      }
       <br />
       <input style={{ width: "350px", marginTop: "30px" }} className='form-control' type="file" onChange={handleImageChange} /><br />
-      {image && <b> Image Width:{imgDimensions.Width} <br /> Image Height:{imgDimensions.Height}</b>}
-    </div>
+      {imgDimensions.Width !== 0 && <b> Image Width:{imgDimensions.Width} <br /> Image Height:{imgDimensions.Height}</b>}
+    </div >
   );
 }
 
