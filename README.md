@@ -1,4 +1,4 @@
-# React app to mark an image and set a title on it.
+# React app to create multiple marks on an image and set a title on it.
 
 Installation:
 
